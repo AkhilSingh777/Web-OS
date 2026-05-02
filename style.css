@@ -1,115 +1,181 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
+// ============ BOOT ============
+window.onload = function () {
+  // start progress bar
+  setTimeout(() => {
+    const bar = document.getElementById('progressFill')
+    if (bar) bar.style.width = '100%'
+  }, 100)
+
+  // after 3 seconds go to login
+  setTimeout(() => {
+    showScreen('loginScreen')
+  }, 3000)
+
+  startClock()
 }
 
-/* Every screen takes full page */
-.screen {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+
+// ============ SCREENS ============
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.style.display = 'none'
+  })
+
+  const el = document.getElementById(id)
+  if (el) el.style.display = 'flex'
 }
 
-/* ---- BOOT ---- */
-#bootScreen {
-  background: #0a0a0f;
-  color: white;
-  gap: 12px;
+
+// ============ LOGIN ============
+function login() {
+  const user = document.getElementById('username').value
+  const pass = document.getElementById('password').value
+
+  if (user === 'admin' && pass === '1234') {
+    localStorage.setItem('loggedIn', 'true')
+    showScreen('desktopScreen')
+  } else {
+    alert('Wrong username or password!')
+  }
 }
-.boot-logo    { font-size: 40px; letter-spacing: 4px; }
-.boot-subtitle{ font-size: 13px; color: #666; letter-spacing: 3px; }
-.progress-bar { width: 200px; height: 3px; background: #222; border-radius: 2px; }
-.progress-fill{ height: 100%; width: 0%; background: #6c63ff;
-                border-radius: 2px; transition: width 2.5s ease; }
 
-/* ---- LOGIN ---- */
-#loginScreen  { background: #0d0d18; }
-.login-box    { display: flex; flex-direction: column; align-items: center;
-                gap: 12px; background: rgba(255,255,255,0.05);
-                border: 1px solid rgba(255,255,255,0.1);
-                border-radius: 16px; padding: 32px; width: 280px; }
-.avatar       { font-size: 40px; }
-.login-name   { color: white; font-size: 18px; }
-.login-box input  { width: 100%; padding: 10px; background: rgba(255,255,255,0.07);
-                    border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
-                    color: white; outline: none; }
-.login-box button { width: 100%; padding: 10px; background: #6c63ff;
-                    border: none; border-radius: 8px; color: white;
-                    cursor: pointer; font-size: 15px; }
-.login-hint   { color: #555; font-size: 12px; }
 
-/* ---- DESKTOP ---- */
-#desktopScreen{ background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
-                justify-content: flex-start; position: relative; }
-.desktop      { flex: 1; width: 100%; padding: 20px;
-                display: flex; flex-wrap: wrap;
-                align-content: flex-start; gap: 20px;
-                position: relative; }
+// ============ WINDOWS ============
+function openWindow(id) {
+  const el = document.getElementById(id)
+  if (el) el.style.display = 'block'
 
-/* ---- ICONS ---- */
-.icon         { display: flex; flex-direction: column; align-items: center;
-                gap: 6px; cursor: pointer; padding: 10px;
-                border-radius: 10px; width: 70px; }
-.icon:hover   { background: rgba(255,255,255,0.1); }
-.icon-img     { font-size: 28px; }
-.icon-label   { color: white; font-size: 11px; text-align: center; }
+  loadNotes() // refresh notes when opening
+}
 
-/* ---- WINDOW ---- */
-.window       { position: absolute; background: #1e1e2e;
-                border: 1px solid rgba(255,255,255,0.1);
-                border-radius: 12px; overflow: hidden;
-                min-width: 220px; z-index: 10; }
-.titlebar     { background: #2a2a3e; padding: 10px 12px;
-                display: flex; align-items: center; gap: 10px;
-                cursor: grab; user-select: none; }
-.traffic-lights{ display: flex; gap: 6px; }
-.dot          { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; }
-.dot.red      { background: #ff5f57; }
-.dot.yellow   { background: #ffbd2e; }
-.dot.green    { background: #28c840; }
-.win-title    { color: #aaa; font-size: 13px; }
-.win-body     { padding: 16px; display: flex;
-                flex-direction: column; gap: 10px; }
+function closeWindow(id) {
+  const el = document.getElementById(id)
+  if (el) el.style.display = 'none'
+}
 
-/* ---- NOTES ---- */
-.win-body textarea{ width: 220px; height: 100px; background: rgba(255,255,255,0.05);
-                    border: 1px solid rgba(255,255,255,0.1);
-                    border-radius: 8px; color: white; padding: 8px;
-                    resize: none; outline: none; font-size: 13px; }
-.win-body button  { background: #6c63ff; border: none; border-radius: 8px;
-                    color: white; padding: 8px 16px; cursor: pointer; }
-.note-item    { background: rgba(255,255,255,0.05); border-radius: 6px;
-                padding: 8px; color: #ccc; font-size: 12px;
-                border-left: 3px solid #6c63ff; }
 
-/* ---- CALCULATOR ---- */
-#calcDisplay  { background: rgba(0,0,0,0.4); color: white; font-size: 24px;
-                text-align: right; padding: 10px 12px;
-                border-radius: 8px; margin-bottom: 10px; min-height: 46px; }
-.calc-grid    { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-.calc-grid button { background: rgba(255,255,255,0.08); border: none;
-                    border-radius: 8px; color: #ccc; padding: 12px;
-                    font-size: 14px; cursor: pointer; }
-.calc-grid button:hover { background: rgba(255,255,255,0.15); }
-.calc-op      { color: #a89fff !important; }
-.calc-clear   { color: #ff6b6b !important; }
-.calc-eq      { background: #6c63ff !important; color: white !important; }
-.calc-zero    { grid-column: span 2; }
+// ============ DRAG ============
+let dragging = null
+let offsetX = 0
+let offsetY = 0
 
-/* ---- TASKBAR ---- */
-.taskbar      { width: 100%; background: rgba(10,10,20,0.9);
-                padding: 8px 16px; display: flex;
-                align-items: center; justify-content: space-between;
-                border-top: 1px solid rgba(255,255,255,0.08); }
-.taskbar-left { display: flex; align-items: center; gap: 10px; }
-.start-btn    { background: #6c63ff; color: white; padding: 5px 14px;
-                border-radius: 8px; font-size: 13px; cursor: pointer; }
-.tb-icon      { font-size: 20px; cursor: pointer; padding: 4px 8px;
-                border-radius: 6px; }
-.tb-icon:hover{ background: rgba(255,255,255,0.1); }
-#clock        { color: #ccc; font-size: 13px; font-weight: 500; }
+function startDrag(e, id) {
+  // prevent dragging when clicking close buttons
+  if (e.target.classList.contains('dot')) return
+
+  dragging = document.getElementById(id)
+  offsetX = e.clientX - dragging.offsetLeft
+  offsetY = e.clientY - dragging.offsetTop
+}
+
+document.addEventListener('mousemove', function(e) {
+  if (!dragging) return
+
+  dragging.style.left = (e.clientX - offsetX) + 'px'
+  dragging.style.top  = (e.clientY - offsetY) + 'px'
+})
+
+document.addEventListener('mouseup', function() {
+  dragging = null
+})
+
+
+// ============ CLOCK ============
+function startClock() {
+  setInterval(function() {
+    const now  = new Date()
+    const h    = String(now.getHours()).padStart(2, '0')
+    const m    = String(now.getMinutes()).padStart(2, '0')
+
+    const clock = document.getElementById('clock')
+    if (clock) clock.textContent = h + ':' + m
+  }, 1000)
+}
+
+
+// ============ NOTES ============
+function saveNote() {
+  const input = document.getElementById('noteInput')
+  const text = input.value
+
+  if (!text.trim()) return
+
+  const notes = JSON.parse(localStorage.getItem('notes') || '[]')
+  notes.push(text)
+  localStorage.setItem('notes', JSON.stringify(notes))
+
+  input.value = ''
+  loadNotes()
+}
+
+function loadNotes() {
+  const notes = JSON.parse(localStorage.getItem('notes') || '[]')
+  const list  = document.getElementById('notesList')
+  if (!list) return
+
+  list.innerHTML = notes.map(function(note) {
+    return '<div class="note-item">' + note + '</div>'
+  }).join('')
+}
+
+
+// ============ CALCULATOR ============
+
+// buttons layout
+const buttons = [
+  'C',  '⌫', '%', '/',
+  '7',  '8', '9', '*',
+  '4',  '5', '6', '-',
+  '1',  '2', '3', '+',
+  '0',        '.', '='
+]
+
+// calculator state
+let calcValue = ''
+
+// build buttons AFTER DOM is ready
+window.addEventListener('load', function () {
+
+  const grid = document.getElementById('calcGrid')
+  if (!grid) return
+
+  buttons.forEach(function(btn) {
+    const b = document.createElement('button')
+    b.textContent = btn
+
+    if (btn === '=')   b.classList.add('calc-eq')
+    if (btn === 'C')   b.classList.add('calc-clear')
+    if (btn === '0')   b.classList.add('calc-zero')
+    if (['/', '*', '-', '+', '%', '⌫'].includes(btn)) b.classList.add('calc-op')
+
+    b.onclick = function() { calcInput(btn) }
+
+    grid.appendChild(b)
+  })
+
+})
+
+
+// calculator logic
+function calcInput(val) {
+  const display = document.getElementById('calcDisplay')
+
+  if (val === 'C') {
+    calcValue = ''
+  } 
+  else if (val === '⌫') {
+    calcValue = calcValue.slice(0, -1)
+  } 
+  else if (val === '=') {
+    try {
+      calcValue = eval(calcValue).toString()
+    } catch {
+      calcValue = 'Error'
+    }
+  } 
+  else {
+    calcValue += val
+  }
+
+  display.textContent = calcValue || '0'
+}
