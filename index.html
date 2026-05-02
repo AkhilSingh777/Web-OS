@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WebOS</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ========== SCREEN 1 — BOOT ========== -->
+  <div id="bootScreen" class="screen">
+
+    <div class="boot-logo">WebOS</div>
+    <div class="boot-subtitle">loading system...</div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+  </div>
+
+
+  <!-- ========== SCREEN 2 — LOGIN ========== -->
+  <div id="loginScreen" class="screen" style="display:none">
+
+    <div class="login-box">
+      <div class="avatar">👤</div>
+      <div class="login-name">Admin</div>
+
+      <input type="text" id="username" placeholder="Username" />
+      <input type="password" id="password" placeholder="Password" />
+
+      <button onclick="login()">Sign In</button>
+      <p class="login-hint">user: admin / pass: 1234</p>
+    </div>
+
+  </div>
+
+
+  <!-- ========== SCREEN 3 — DESKTOP ========== -->
+  <div id="desktopScreen" class="screen" style="display:none">
+
+    <!-- Desktop icons area -->
+    <div class="desktop">
+
+      <!-- Icon: Notes -->
+      <div class="icon" ondblclick="openWindow('notesWindow')">
+        <div class="icon-img">📝</div>
+        <div class="icon-label">Notes</div>
+      </div>
+
+      <!-- Icon: Calculator -->
+      <div class="icon" ondblclick="openWindow('calcWindow')">
+        <div class="icon-img">🧮</div>
+        <div class="icon-label">Calculator</div>
+      </div>
+
+
+      <!-- ====== WINDOW: NOTES ====== -->
+      <div id="notesWindow" class="window" style="display:none; left:100px; top:60px;">
+
+        <!-- Title bar — drag from here -->
+        <div class="titlebar" onmousedown="startDrag(event, 'notesWindow')">
+          <div class="traffic-lights">
+            <span class="dot red"   onclick="closeWindow('notesWindow')"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <span class="win-title">Notes</span>
+        </div>
+
+        <!-- App content -->
+        <div class="win-body">
+          <textarea id="noteInput" placeholder="Type your note..."></textarea>
+          <button onclick="saveNote()">Save Note</button>
+          <div id="notesList"></div>
+        </div>
+
+      </div>
+
+
+      <!-- ====== WINDOW: CALCULATOR ====== -->
+      <div id="calcWindow" class="window" style="display:none; left:200px; top:80px;">
+
+        <!-- Title bar -->
+        <div class="titlebar" onmousedown="startDrag(event, 'calcWindow')">
+          <div class="traffic-lights">
+            <span class="dot red"   onclick="closeWindow('calcWindow')"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <span class="win-title">Calculator</span>
+        </div>
+
+        <!-- Calculator content -->
+        <div class="win-body">
+        <div id="calcDisplay">0</div>
+	<div id="calcGrid" class="calc-grid">
+
+	</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <!-- end .desktop -->
+
+
+    <!-- Taskbar — always at bottom -->
+    <div class="taskbar">
+      <div class="taskbar-left">
+        <div class="start-btn">⊞ Start</div>
+        <div class="tb-icon" ondblclick="openWindow('notesWindow')">📝</div>
+        <div class="tb-icon" ondblclick="openWindow('calcWindow')">🧮</div>
+      </div>
+      <div class="taskbar-right">
+        <div id="clock">00:00</div>
+      </div>
+    </div>
+
+  </div>
+  <!-- end desktopScreen -->
+
+
+  <script src="script.js"></script>
+</body>
+</html>
